@@ -5,7 +5,7 @@ export default function Home() {
        <div className="text-amber-400">
         Hello world
 
-           <h1 className="text-amber-50">hi world</h1>
+           <h1 className="text-amber-50">hello world</h1>
            <h2>testing webhook rechecking</h2>
        </div>
   );
