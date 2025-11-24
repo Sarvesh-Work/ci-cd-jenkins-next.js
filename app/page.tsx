@@ -6,6 +6,7 @@ export default function Home() {
         Hello world
 
            <h1 className="text-amber-50">hi</h1>
+           <h2>webhook test with cicd</h2>
        </div>
   );
 }
