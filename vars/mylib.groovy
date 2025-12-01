@@ -7,7 +7,7 @@ def codePulling(gitUrl,branch){
 
 def buildImage(image,tag){
     echo 'Build started'
-    sh 'docker build -t $image:$tag .'
+    sh "docker build -t ${image}:${tag} ."
     echo 'Done building'
 }
 
@@ -33,6 +33,6 @@ def pushToDockerHub(image,tag){
  //  ONLY FOR TESTING IN PRODUCTION ENV WE USE SEPARATE  EC2 FOR TESTING SND DEPLOYMENT 
 def deployApp(dockerHubRepo,image){
     echo 'Started using image from DockerHub'
-    sh 'docker run -d -p 3000:3000 $dockerHubRepo/$image'
+    sh "docker run -d -p 3000:3000 ${dockerHubRepo}/${image}"
     echo 'Done building'
 }
