@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js CI/CD Pipeline with Jenkins, Docker & AWS EC2
 
-## Getting Started
+## 📌 About This Project
 
-First, run the development server:
+This repository contains a **complete CI/CD setup** to deploy a **Next.js application** using:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white) **Next.js**
+- ![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins&logoColor=white) **Jenkins**
+- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) **Docker**
+- ![DockerHub](https://img.shields.io/badge/DockerHub-0db7ed?style=flat&logo=docker&logoColor=white) **Docker Hub**
+- ![AWS EC2](https://img.shields.io/badge/AWS_EC2-FF9900?style=flat&logo=amazon-aws&logoColor=white) **AWS EC2**
+- ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black) **Linux Server**
+
+This CI/CD pipeline automates the entire workflow:
+
+🧑‍💻 **Code → GitHub Push → Jenkins Build → Docker Push → EC2 Deployment**  
+Everything runs on **ONE AWS EC2 instance** (Jenkins + Deployment) for learning and cost-saving.
+
+---
+
+## 🧩 CI/CD FLOW
+
+![CICD FLOW](./assets/cicd-flow.png)
+
+---
+
+## 📁 Repository Structure
+
+```
+repo/
+├── app/                       → Next.js application code 🟦
+├── public/                    → Static files  
+├── vars/                      → Jenkins shared library functions 🤖
+├── .dockerignore              → Docker ignore rules 🐳
+├── .gitignore                 → Git ignore rules  
+├── Dockerfile                 → Docker build instructions 🐳
+├── Jenkinsfile                → Pipeline using shared library 🤖
+├── Jenkinsfile.noshared       → Pipeline without shared library 🤖
+├── README.md                  → Documentation  
+├── next.config.ts             → Next.js config 🟦
+├── tsconfig.json              → TypeScript config  
+├── package.json               → Dependencies  
+└── package-lock.json          → Lock file
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 What This CI/CD Pipeline Does
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### ✅ Development
+- Developer updates the code
+- Commits & pushes to GitHub
 
-## Learn More
+### ✅ Jenkins Trigger
+- GitHub Webhook notifies Jenkins
+- Jenkins pulls the latest code  
+  *( Webhook)*
 
-To learn more about Next.js, take a look at the following resources:
+### ✅ Build Stage
+- Install dependencies
+- Build Docker image
+- Tag image properly (`username/image:tag`)
+- Push image to Docker Hub
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### ✅ Deployment (on EC2)
+- EC2 pulls new Docker image
+- Runs the updated container
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### ✅ Production
+- App updates automatically
+- Zero manual deployment steps
+- Fast & smooth CI/CD automation
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📦 How to Use This Project (Step-by-Step)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1️⃣ Clone the GitHub Repository
+
+```bash
+git clone https://github.com/Sarvesh-Work/ci-cd-jenkins-next.js.git
+cd ci-cd-jenkins-next.js
+```
+
+### 2️⃣ Set Up Jenkins on EC2
+
+Install the following:
+- Jenkins
+- Docker
+- Docker Compose (optional)
+
+Then:
+- Add `jenkins` user to the `docker` group
+- Create these Jenkins credentials:
+  - Docker Hub username/password
+  - GitHub token (only required if repo is private)
+
+### 3️⃣ Configure Jenkins Shared Library
+
+Go to:  
+**Manage Jenkins → System → Global Pipeline Libraries**
+
+Add:
+- **Name:** `shared`
+- **Repository:** Your shared library GitHub repo
+- **Load implicitly:** OFF
+
+### 4️⃣ Configure GitHub Webhook
+
+Go to:  
+**GitHub → Repository → Settings → Webhooks → Add Webhook**
+
+Use:
+```
+http://<your-ec2-public-ip>:8080/github-webhook/
+```
+
+Event:  
+✔ Just the push event
+
+### 5️⃣ Run the Pipeline
+
+Jenkins will automatically:
+1. Pull latest code
+2. Build Docker image
+3. Tag & push to Docker Hub
+4. SSH into EC2
+5. Pull latest image
+6. Re-run the container
+
+This provides a fully automated CI/CD pipeline 🚀
+
+### 6️⃣ Access Your Application
+
+Example:
+```
+http://<your-ec2-public-ip>:3000
+```
+
+---
+
+## 🌟 Why I Built This
+
+To understand real-world DevOps workflows:
+- Practical CI/CD pipelines
+- Jenkins + GitHub integration
+- Docker image build/push
+- EC2 container deployment
+- Power of Jenkins Shared Libraries
+
+This project gave me end-to-end hands-on DevOps experience.
+
+---
+
+## ⭐ Support
+
+If this project helped you, please give the repo a star ⭐  
+It motivates me to build more such projects!
