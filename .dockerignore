@@ -9,3 +9,4 @@ npm-debug.log
 Jenkinsfile
 vars/
 Jenkinsfile.noshared
+.idea
