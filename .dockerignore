@@ -10,3 +10,4 @@ Jenkinsfile
 vars/
 Jenkinsfile.noshared
 .idea
+assets
