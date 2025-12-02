@@ -1,0 +1,60 @@
+// this is the non–shared-library Jenkinsfile
+pipeline {
+    agent any
+    
+    environment {
+        GITHUB_REPO_LINK ="https://github.com/Sarvesh-Work/ci-cd-jenkins-next.js.git"
+        REPO_BRANCH="main"
+        IMAGE="next-app"
+        TAG="latest"
+        DOCKER_HUB_REPO="sarvesh9075"
+        
+    }
+
+    stages {
+        stage('Pulling code from git') {
+            steps {
+                echo 'Pulling code'
+                git url: "${GITHUB_REPO_LINK}", branch: "${REPO_BRANCH}"
+                echo 'Done pulling code'
+            }
+        }
+        
+        stage('Building image') {
+            steps {
+                echo 'Build started'
+                sh 'docker build -t $IMAGE:$TAG .'
+                echo 'Done building'
+            }
+        }
+        
+        stage('Pushing image to DockerHub') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerHub',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    echo 'Pushing image'
+
+                    sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
+                    sh "docker tag  $IMAGE:$TAG $DOCKER_USER/$IMAGE"
+                    sh "docker push $DOCKER_USER/$IMAGE:$TAG"
+
+                    echo 'Done Pushing'
+                }
+            }
+        }
+        
+        //  ONLY FOR TESTING IN PRODUCTION ENV WE USE SEPRATE  EC2 FOR TESTING SND DEPLOYMENT 
+        stage('Deploying the code') {
+            steps {
+                echo 'Started using image from DockerHub'
+                sh 'docker run -d -p 3000:3000 $DOCKER_HUB_REPO/$IMAGE'
+                echo 'Done building'
+            }
+        }
+    }
+}
