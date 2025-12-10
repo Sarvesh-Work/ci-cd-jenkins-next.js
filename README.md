@@ -24,6 +24,34 @@ Everything runs on **ONE AWS EC2 instance** (Jenkins + Deployment) for learning 
 
 ---
 
+
+## 📸 Screenshots
+
+### ✅ Jenkins CI/CD Pipeline
+
+Actual pipeline stages executing in Jenkins:
+
+![Jenkins Pipeline](./assets/jenkins-build.png)
+
+---
+
+### ✅ AWS EC2 Instance Used for Deployment
+
+Jenkins + Docker + deployed container running on a single EC2 instance:
+
+![EC2 Instance](./assets/aws-ec2.png)
+
+---
+
+### ✅ Deployed Next.js Application
+
+Next.js application running on Docker container in EC2:
+
+![App Running](./assets/app-running.png)
+
+---
+
+
 ## 📁 Repository Structure
 
 ```
